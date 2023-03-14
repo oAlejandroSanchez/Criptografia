@@ -43,10 +43,10 @@ def second_consonant():
         for letra in nombre:
             if not is_vocal(letra):
                 print(contador)
-                contador += 1;
+                contador += 1
                 consonante = letra
             elif contador == 2:
-                break;
+                break
     else:
         print(" *** Revisa que tu nombre solo contenga letras *** ")
 
