@@ -1,2 +1,2 @@
-# Criptograf-a
+# Criptografía
 Algoritmos de cifrado
