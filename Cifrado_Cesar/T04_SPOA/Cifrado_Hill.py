@@ -11,6 +11,9 @@
 # Mostrar el determinante de K y la inversa de la matriz clave.
 # Algebra de enteros positivos.
 
+# Importando elementos
+import re
+
 # Alfabeto
 alfabeto = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'
 
@@ -22,9 +25,6 @@ matrizMensaje = []
 clave = ''
 matrizClave = []
 
-# Tamaño de la matriz
-sizeMatriz = 0
-
 # Imprimimos en pantalla el alfabeto
 def printAlphabet(alfabeto):
     for letra in alfabeto:
@@ -34,18 +34,23 @@ def printAlphabet(alfabeto):
 
 # Generamos una matriz de nxn (cuadrada) usando la clave
 def generateMatriz(key):
-    global matrizClave, alfabeto, sizeMatriz
+    global matrizClave, alfabeto
     matriz = []
     count = 0
 
-    for letra in key:
-        if letra != ' ':
-            if count <= sizeMatriz:
-                count += 1
-                matriz.append(alfabeto.find(letra))
-            else:
-                count = 0
-                matrizClave.append(matriz)
+    for index in range(5):
+        matrizClave[index].append(index)
+
+    print(matrizClave)
+
+    # for letra in key:
+    #     if letra != ' ':
+    #         if count <= sizeMatriz:
+    #             count += 1
+    #             matriz.append(alfabeto.find(letra))
+    #         else:
+    #             count = 0
+    #             matrizClave.append(matriz)
     
     # if len(matrizClave[-1]) < sizeMatriz:
     #     for index in range(abs(len(matrizClave[-1])-sizeMatriz)):
@@ -55,7 +60,9 @@ def generateMatriz(key):
 # Obtenemos la clave
 def getKey():
     global clave, matrizClave
-    clave = input("\tEscribe la clave: ").upper()
+
+    # Con re.sub(), se eliminan los espacios de la cadena de carácteres
+    clave = re.sub(" ", "", input("\tEscribe la clave: ").upper())
 
     # Se crea la matriz en función de la clave
     generateMatriz(clave)
@@ -66,22 +73,15 @@ def getKey():
 # Obtenemos el mensaje
 def getMessage():
     global mensaje
-    mensaje = input("Escribe el mensaje a cifrar. \nSin espacios, ni carácteres espciales: ").upper()
 
-# El usuario puede elegir el tamaño de la matriz
-def getSizeMatriz():
-    global sizeMatriz
-    #print
-    sizeMatriz = int(input("\tIngresa el número de filas de la matriz \n\t(La matriz generada es cuadrada, es decir, tiene el mismo número de columnas que de filas): "))
+    # Con re.sub(), se eliminan los espacios entre la frase
+    mensaje = re.sub(" ", "", input("\tEscribe el mensaje a cifrar. \n\tSin espacios, ni carácteres espciales: ").upper())
 
+# Indicamos el ta
+
+# Se imprime la matriz
 def printMatriz():
     global matrizClave
-
-    print("\tLa matriz es: " + str(len(matrizClave)))
-    for index in range(len(matrizClave)):
-        print(str(index))
-        for data in matrizClave[index]:
-            print(" "+ str(data))
 
 # Definimos si la matriz es invertible
 # En este caso, se utilizará una matriz de 3x3
@@ -104,7 +104,7 @@ def main():
     # El usuario puede elegir el tamaño de la matriz
     # Es importante aclarar que la matriz es cuadrada, es decir tiene el mismo
     # número de filas que de columnas
-    getSizeMatriz()
+    #getSizeMatriz()
 
     # Obtenemos la clave
     getKey()
