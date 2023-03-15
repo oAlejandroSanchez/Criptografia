@@ -4,6 +4,7 @@
 # Nombre: Sánchez Pérez Omar Alejandro
 # No. Cuenta: 315072264
 
+# Tarea 04
 # Asignatura: Criptografía
 # Semestre: 2023 - 2
 
@@ -29,7 +30,6 @@ def is_exist(letra):
 
 # Imprimimos en pantalla el alfabeto
 def printAlphabet(alfabeto):
-    print(alfabeto)
     for letra in alfabeto:
         print("\t| " + letra + " | " + str(alfabeto.find(letra)) + (" ","  ")[alfabeto.find(letra) < 10] + "|" )
 
@@ -170,4 +170,3 @@ def main():
 
 # Ejecutamos la función principal
 main()
-
