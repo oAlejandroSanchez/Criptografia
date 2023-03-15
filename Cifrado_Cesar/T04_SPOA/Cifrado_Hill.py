@@ -25,6 +25,9 @@ matrizMensaje = []
 clave = ''
 matrizClave = []
 
+# Tamaño de la matriz cuadrada
+sizeMatriz = 0
+
 # Imprimimos en pantalla el alfabeto
 def printAlphabet(alfabeto):
     for letra in alfabeto:
@@ -33,28 +36,19 @@ def printAlphabet(alfabeto):
     print("")
 
 # Generamos una matriz de nxn (cuadrada) usando la clave
-def generateMatriz(key):
-    global matrizClave, alfabeto
-    matriz = []
+def generateMatrizClave():
+    global matrizClave, alfabeto, sizeMatriz, clave
     count = 0
+    size = sizeMatriz * sizeMatriz
 
-    for index in range(5):
-        matrizClave[index].append(index)
-
-    print(matrizClave)
-
-    # for letra in key:
-    #     if letra != ' ':
-    #         if count <= sizeMatriz:
-    #             count += 1
-    #             matriz.append(alfabeto.find(letra))
-    #         else:
-    #             count = 0
-    #             matrizClave.append(matriz)
+    if len(clave) < size:
+        for index in range(size - len(clave)):
+            clave += 'X'
+    elif len(clave) > size:
+        clave = clave[:size]
     
-    # if len(matrizClave[-1]) < sizeMatriz:
-    #     for index in range(abs(len(matrizClave[-1])-sizeMatriz)):
-    #         print(index)
+    for letra in clave:
+        
 
 
 # Obtenemos la clave
@@ -65,7 +59,7 @@ def getKey():
     clave = re.sub(" ", "", input("\tEscribe la clave: ").upper())
 
     # Se crea la matriz en función de la clave
-    generateMatriz(clave)
+    generateMatrizClave()
 
     # Se imprime la matriz
     printMatriz()
@@ -77,15 +71,19 @@ def getMessage():
     # Con re.sub(), se eliminan los espacios entre la frase
     mensaje = re.sub(" ", "", input("\tEscribe el mensaje a cifrar. \n\tSin espacios, ni carácteres espciales: ").upper())
 
-# Indicamos el ta
+# Indicamos el tamaño de la matriz cuadrada
+def getSizeMatriz():
+    global sizeMatriz
+
+    sizeMatriz = int(input("\tIndica el tamaño de la matriz: "))
 
 # Se imprime la matriz
 def printMatriz():
-    global matrizClave
-
-# Definimos si la matriz es invertible
-# En este caso, se utilizará una matriz de 3x3
-# def is_Inverted():
+    global matrizClave, sizeMatriz
+    count = 0
+    print(matrizClave)
+    for index in matrizClave:
+        print(str(matrizClave[index]))
 
 # Función principal
 def main():
@@ -104,7 +102,7 @@ def main():
     # El usuario puede elegir el tamaño de la matriz
     # Es importante aclarar que la matriz es cuadrada, es decir tiene el mismo
     # número de filas que de columnas
-    #getSizeMatriz()
+    getSizeMatriz()
 
     # Obtenemos la clave
     getKey()
