@@ -41,49 +41,58 @@ def generateMatrizClave():
     count = 0
     size = sizeMatriz * sizeMatriz
 
+    # Si la longitud es menor que el número de filas, entonces completa la frase con el dímbolo X
+    # de lo contrario se recorta la frase
     if len(clave) < size:
+        print("\tComo la longitud de la frase es menor que el número de filas, \t\nentonces se completa con el símbolo 'X': ")
         for index in range(size - len(clave)):
             clave += 'X'
     elif len(clave) > size:
+        print("\tComo la frase es más grande que el número de filas, \t\nentonces se recorta la frase: ")
         clave = clave[:size]
     
+    print("\tLa clave es: " + clave)
+
     for letra in clave:
+        matrizClave.append(alfabeto.find(letra))
+
         
 
 
 # Obtenemos la clave
 def getKey():
     global clave, matrizClave
-
     # Con re.sub(), se eliminan los espacios de la cadena de carácteres
-    clave = re.sub(" ", "", input("\tEscribe la clave: ").upper())
-
+    clave = re.sub(" ", "", input("\tEscribe la clave de cifrado: ").upper())
     # Se crea la matriz en función de la clave
     generateMatrizClave()
-
     # Se imprime la matriz
     printMatriz()
 
 # Obtenemos el mensaje
 def getMessage():
     global mensaje
-
     # Con re.sub(), se eliminan los espacios entre la frase
     mensaje = re.sub(" ", "", input("\tEscribe el mensaje a cifrar. \n\tSin espacios, ni carácteres espciales: ").upper())
 
 # Indicamos el tamaño de la matriz cuadrada
 def getSizeMatriz():
     global sizeMatriz
-
-    sizeMatriz = int(input("\tIndica el tamaño de la matriz: "))
+    # El usuario puede indicar el tamaño de la matriz
+    sizeMatriz = int(input("\tIndica el tamaño de la matriz (número de filas): "))
 
 # Se imprime la matriz
 def printMatriz():
     global matrizClave, sizeMatriz
     count = 0
     print(matrizClave)
-    for index in matrizClave:
-        print(str(matrizClave[index]))
+    for index in range(len(matrizClave)):
+        if count < sizeMatriz:
+            count += 1
+            print("\t"+ str(matrizClave[index]), end=' ')
+        else:
+            count = 0
+            print("")
 
 # Función principal
 def main():
