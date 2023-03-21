@@ -11,113 +11,117 @@
 # Mostrar el determinante de K y la inversa de la matriz clave.
 # Algebra de enteros positivos.
 
-# Importando elementos
-import re
+# Importamos los elementos
+import re, numpy as np
 
-# Alfabeto
-alfabeto = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'
-
-# Mensaje
-mensaje = ''
-matrizMensaje = []
-
-# Clave
-clave = ''
-matrizClave = []
-
-# Tamaño de la matriz cuadrada
-sizeMatriz = 0
-
-# Imprimimos en pantalla el alfabeto
-def printAlphabet(alfabeto):
-    for letra in alfabeto:
-        print("\t| " + letra + " | " + str(alfabeto.find(letra)) + (" ","  ")[alfabeto.find(letra) < 10] + "|" )
-    
-    print("")
-
-# Generamos una matriz de nxn (cuadrada) usando la clave
-def generateMatrizClave():
-    global matrizClave, alfabeto, sizeMatriz, clave
-    count = 0
-    size = sizeMatriz * sizeMatriz
-
-    # Si la longitud es menor que el número de filas, entonces completa la frase con el dímbolo X
-    # de lo contrario se recorta la frase
-    if len(clave) < size:
-        print("\tComo la longitud de la frase es menor que el número de filas, \t\nentonces se completa con el símbolo 'X': ")
-        for index in range(size - len(clave)):
-            clave += 'X'
-    elif len(clave) > size:
-        print("\tComo la frase es más grande que el número de filas, \t\nentonces se recorta la frase: ")
-        clave = clave[:size]
-    
-    print("\tLa clave es: " + clave)
-
-    for letra in clave:
-        matrizClave.append(alfabeto.find(letra))
-
-        
-
-
-# Obtenemos la clave
-def getKey():
-    global clave, matrizClave
-    # Con re.sub(), se eliminan los espacios de la cadena de carácteres
-    clave = re.sub(" ", "", input("\tEscribe la clave de cifrado: ").upper())
-    # Se crea la matriz en función de la clave
-    generateMatrizClave()
-    # Se imprime la matriz
-    printMatriz()
-
-# Obtenemos el mensaje
-def getMessage():
-    global mensaje
-    # Con re.sub(), se eliminan los espacios entre la frase
-    mensaje = re.sub(" ", "", input("\tEscribe el mensaje a cifrar. \n\tSin espacios, ni carácteres espciales: ").upper())
-
-# Indicamos el tamaño de la matriz cuadrada
-def getSizeMatriz():
-    global sizeMatriz
-    # El usuario puede indicar el tamaño de la matriz
-    sizeMatriz = int(input("\tIndica el tamaño de la matriz (número de filas): "))
-
-# Se imprime la matriz
-def printMatriz():
-    global matrizClave, sizeMatriz
-    count = 0
-    print(matrizClave)
-    for index in range(len(matrizClave)):
-        if count < sizeMatriz:
-            count += 1
-            print("\t"+ str(matrizClave[index]), end=' ')
-        else:
-            count = 0
-            print("")
-
-# Función principal
-def main():
-    global alfabeto
+# Definimos la función principal
+def __main__():
+    alfabeto = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'
 
     # Título
-    print("\t\tAlgoritmo de Hill (Ejercicio 2)\n")
+    print("\tCifrado de Hill\n")
 
-    # Se imprime el alfabeto con el valor de cada una de letras
-    # de acuerdo a su posición
-    printAlphabet(alfabeto)
+    # Se solicita el mensaje
+    mensaje = re.sub(" ","",input("\tEscribe el mensaje a cifrar: ").upper())
 
-    # Se obtiene el mensaje
-    getMessage()
+    while len(mensaje)%3 != 0:
+        mensaje += 'X'
+    
+    # Cifrado del mensaje
+    print("\tEn este caso se utilizarán matrices de 3x3, por lo tanto,\n\tel mensaje se dividirá cada 3 carácteres.")
+    M = np.array([[0 for _ in range(3)] for _ in range(int(len(mensaje)/3))])
 
-    # El usuario puede elegir el tamaño de la matriz
-    # Es importante aclarar que la matriz es cuadrada, es decir tiene el mismo
-    # número de filas que de columnas
-    getSizeMatriz()
+    # Se separa el mensaje en trigramas
+    print("\tPor lo tanto el mensaje quedó de la siguiente forma: \n")
+    position = 0
+    for i in range(len(M)):
+        for j in range(len(M[i])):
+            M[i, j] = alfabeto.find(mensaje[position])
+            position += 1
+    
+    for i in range(len(M)):
+        print("\t" + str(M[i]))
 
-    # Obtenemos la clave
-    getKey()
+    clave = re.sub(" ", "", input("\n\tIngresa una clave de 9 carácteres: ").upper())
 
-    # Obtenemos la clave y determinamos si es invertible 
-    # a través de determinantes
+    det = 0
+    K = np.array([[0 for _ in range(3)] for _ in range(3)])
+    position = 0
+    while det == 0:
+        if len(clave) > 9:
+            clave = clave[:9]
+            print(clave)
+        elif len(clave) < 9:
+            while len(clave) != 9:
+                clave += 'A'
+        
+        for i in range(len(K)):
+            for j in range(len(K[i])):
+                K[i, j] = alfabeto.find(clave[position])
+                position += 1
+        
+        det = np.linalg.det(K)
+        
+        if det == 0:
+            print("\tIntentalo de nuevo, ya que la determinante es igual a cero.")
+            print("\tPor lo tanto, no tiene inversa.")
 
-# Ejecutamos la función principal
-main()
+    # Se imprime en pantala el valor de la determinante y la matriz resultante
+    print("\tDeterminate de K = " + str(det))
+    print("\tLa matriz K, quedó de la siguiente forma: \n")
+    for i in range(len(K)):
+        print("\t" + str(K[i]))
+    print()
+
+    aux = np.array([[0 for _ in range(3)] for _ in range(int(len(mensaje)/3))])
+    print("\tCifrando el mensaje: \n")
+    for i in range(len(M)):
+        aux[i] = np.dot(K,M[i])
+        for j in range(len(M[i])):
+            aux[i,j] = aux[i,j]%27
+            if j != 1:
+                print("\t" + str(K[j]) + "   " + str(M[i,j]) + "           " + str(aux[i,j]))
+            else:
+                print("\t" + str(K[j]) + " X " + str(M[i,j]) + " mod(27) = " + str(aux[i,j]))
+        
+        print()
+
+    print("\tEl mensaje quedó cifrado: ", end = '')
+    for i in range(len(aux)):
+        for j in range(len(aux[i])):
+            print(alfabeto[aux[i,j]], end='')
+
+    print()
+
+    # Se descifra el mensaje
+    print("\n\tDescifrando el mensaje: ")
+    print("\tLa matriz inversa de K es: \n")
+    K = np.linalg.inv(K)
+    for i in range(len(K)):
+        print("\t" + str(K[i]))
+    
+    print()
+
+    aux2 = np.array([[0.0 for _ in range(3)] for _ in range(int(len(mensaje)/3))])
+    for i in range(len(aux)):
+        aux2[i] = np.dot(K,aux[i])
+        for j in range(len(aux[i])):
+            print(aux2[i,j])
+            aux[i,j] = aux[i,j]%27
+            if j != 1:
+                print("\t" + str(K[j]) + "   " + str(aux[i,j]) + "           " + str(aux2[i,j]))
+            else:
+                print("\t" + str(K[j]) + " X " + str(aux[i,j]) + " mod(27) = " + str(aux2[i,j]))
+
+    print(M)
+    print("\tEl mensaje quedó descifrado: ", end = '')
+    for i in range(len(M)):
+        for j in range(len(M[i])):
+            print(alfabeto[M[i,j]], end='')
+
+    print()
+
+    print("\n\n")
+
+# Se ejecuta la función principal
+__main__()
