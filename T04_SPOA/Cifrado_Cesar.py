@@ -163,8 +163,9 @@ def main():
         con_Reemplazo(alfabeto)
     elif opcion == 'c':
         getMessage()
-        alphabet(opcion)
-        con_Reemplazo(nuevo_alfabeto)
+        clave_K(len(mensaje))
+        # alphabet(opcion)
+        #con_Reemplazo(nuevo_alfabeto)
     else:
         print("\t\t\nOpción inválida\n")
 
