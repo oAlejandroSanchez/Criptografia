@@ -29,8 +29,8 @@ def mod_inverse(b, n):
 def __main__():
     # Expresión general
     # a * b mod n = 1
-    b = 17   
-    n = 2268 
+    b = 4   
+    n = 27 
     b_inv = mod_inverse(b, n)
 
     print("El inverso multiplicativo de {} módulo {} es {}".format(b, n, b_inv))

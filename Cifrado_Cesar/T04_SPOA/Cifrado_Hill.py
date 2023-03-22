@@ -14,6 +14,27 @@
 # Importamos los elementos
 import re, numpy as np
 
+# Se define la función para determinar el inverso multiplicativo
+def inverso_multiplicativo(b, n):
+    
+    # Utilizamos el algoritmo extendido de Euclides para encontrar el máximo común divisor de b y n
+    r1, r2 = b, n
+    s1, s2 = 1, 0
+    while r2 > 0:
+        q = r1 // r2
+        r = r1 - q*r2
+        r1, r2 = r2, r
+        s = s1 - q*s2
+        s1, s2 = s2, s
+    
+    # Si el máximo común divisor de b y n no es 1, entonces b no tiene inverso multiplicativo módulo n
+    if r1 != 1:
+        raise ValueError("El número no tiene inverso multiplicativo módulo n")
+    
+    # Si el máximo común divisor de b y n es 1, entonces el inverso multiplicativo de b módulo n es s1
+    return s1 % n
+
+
 # Definimos la función principal
 def __main__():
     alfabeto = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'
@@ -67,7 +88,17 @@ def __main__():
             print("\tPor lo tanto, no tiene inversa.")
 
     # Se imprime en pantala el valor de la determinante y la matriz resultante
-    print("\tDeterminate de K = " + str(det))
+    print("\tDeterminate de K = " + str(int(round(det))))
+    coprimo = int(round(det))%27
+    print("\tPor lo tanto, K mod 27 = " + str(coprimo))
+
+    if int(round(det))%27 != 0:
+        print("\tLa matriz tiene inversa con módulo 27...")
+        print("\tPor lo tanto, el coprimo de K = " + str(int(round(det))) + " es " + str(coprimo))
+    else:
+        print("\tLa matriz no es inversa en módulo 27")
+        return
+
     print("\tLa matriz K, quedó de la siguiente forma: \n")
     for i in range(len(K)):
         print("\t" + str(K[i]))
@@ -96,29 +127,53 @@ def __main__():
     # Se descifra el mensaje
     print("\n\tDescifrando el mensaje: ")
     print("\tLa matriz inversa de K es: \n")
-    K = np.linalg.inv(K)
-    for i in range(len(K)):
-        print("\t" + str(K[i]))
     
+    # Calcular la matriz de cofactores
+    Adj = np.zeros((3, 3))
+    for i in range(3):
+        for j in range(3):
+            signo = (-1) ** (i+j)
+            submatriz = K[np.array(list(range(i))+list(range(i+1, 3))), :]
+            submatriz = submatriz[:, np.array(list(range(j))+list(range(j+1, 3)))]
+            Adj[i,j] = int(round(signo * np.linalg.det(submatriz)))
+
+    Adj = Adj.T
+    print("\t\tPrimero se determina la matriz adjunta, la cual es: ")
+    for i in range(len(Adj)):
+        print("\t\t" + str(Adj[i]))
+
+    # Se determina el inverso multiplicativo del coprimo
+    inverso = inverso_multiplicativo(coprimo,27)
+    print("\n\tEl inverso multiplicativo del coprimo es: " + str(inverso))
+
+    # Se multiplica la matriz adjunta por el inverso multiplicativo
+    print("\n\tFinalmente, la matriz inversa queda de la siguiente forma: \n")
+    K = np.zeros((3, 3))
+    for i in range(len(Adj)):
+        print("\t",end="")
+        for j in range(len(Adj[i])):
+            K[i,j] = ((Adj[i,j] * inverso))
+            print("\t" + str(K[i,j]), end="")
+        print()
+
     print()
 
-    aux2 = np.array([[0.0 for _ in range(3)] for _ in range(int(len(mensaje)/3))])
+    # Se realiza el descifrado con los componentes ya calculados
+    aux2 = np.array([[0 for _ in range(3)] for _ in range(int(len(mensaje)/3))])
     for i in range(len(aux)):
         aux2[i] = np.dot(K,aux[i])
         for j in range(len(aux[i])):
-            print(aux2[i,j])
-            aux[i,j] = aux[i,j]%27
+            aux2[i,j] = aux2[i,j]%27
             if j != 1:
                 print("\t" + str(K[j]) + "   " + str(aux[i,j]) + "           " + str(aux2[i,j]))
             else:
                 print("\t" + str(K[j]) + " X " + str(aux[i,j]) + " mod(27) = " + str(aux2[i,j]))
+        print()
 
-    print(M)
     print("\tEl mensaje quedó descifrado: ", end = '')
-    for i in range(len(M)):
-        for j in range(len(M[i])):
-            print(alfabeto[M[i,j]], end='')
-
+    for i in range(len(aux2)):
+        for j in range(len(aux2[i])):
+            print(alfabeto[aux2[i,j]], end='')
     print()
 
     print("\n\n")
