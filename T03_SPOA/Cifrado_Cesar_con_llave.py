@@ -29,7 +29,7 @@ encrypt = ''
 # Mensaje descifrado
 desencrypt = ''
 
-# Determinamos si e una vocal
+# Determinamos si es una vocal
 def is_vocal(letra):
     global vocales
     return letra in vocales
