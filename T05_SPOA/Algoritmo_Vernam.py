@@ -70,10 +70,6 @@ def cifrado():
     for letra in mensaje_binario:
         print(letra, end='')
 
-    print("\n\t\tEl mensaje cifrado quedó de la siguiente forma: ", end='')
-    for letra in descifrado_binario:
-        print(letra, end='')
-
 # Descifrado
 def descifrado():
     global descifrado_binario, clave_binario, mensaje_binario
