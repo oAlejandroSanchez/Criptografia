@@ -87,7 +87,7 @@ def descifrado():
     n1 = n2 = ''
     temp = []
     aux = ''
-    
+
     for contador in range(rondas):
         print("\n\t\tRonda: "+str(contador+1))
         for indice in range(len(mensaje_dividido)):
@@ -103,10 +103,10 @@ def descifrado():
 
             print("\t\tS["+str(contador+1)+"]: "+aux+'\t'+n2)
             
-            aux = ''
-            for index in range(len(temp)):
-                aux += temp[int(p[index])-1]
-
+            for index in range(len(aux)):
+                temp[int(p[index])-1] = aux[index]
+            aux = "".join(letra for letra in temp)
+            
             mensaje_dividido[indice] = aux+n2
             print("\t\tP["+str(contador+1)+"]: "+aux+'\t'+n2+"\n")
 
