@@ -17,7 +17,7 @@ public class VerificaFirma {
         if(args.length != 3) {
             System.out.println("Para ejecutar el programa se deben seguir los siguientes pasos: ");
             System.out.println("\t1) Se debe generar el archivo class --> 'javac VerificaFirma.java'");
-            System.out.println("\t2) Se ejecuta el programa --> 'java VerificaFirma'");
+            System.out.println("\t2) Se ejecuta el programa --> 'java VerificaFirma clavepublica.txt datosaFirmar.txt'");
         } else try {
             // Se importan los bytes codificados de la clave pública del archivo que lo contiene y
             // y los convierte en un objeto de tipo PublicKey
